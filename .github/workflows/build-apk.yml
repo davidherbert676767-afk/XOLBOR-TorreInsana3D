@@ -1,0 +1,25 @@
+name: Build Torre Insana 3D APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.4.1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Android APK
+        run: |
+          mkdir -p build
+          godot --headless --path . --export-debug "Android" build/XOLBOR-TorreInsana-3D.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: XOLBOR-TorreInsana-3D-APK
+          path: build/XOLBOR-TorreInsana-3D.apk
