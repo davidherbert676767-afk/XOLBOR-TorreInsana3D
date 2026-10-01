@@ -11,8 +11,8 @@ window/size/window_height_override=720
 [rendering]
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
 textures/default_filters/use_nearest_mipmap_filter=false
-
 [input]
 move_left={"deadzone":0.5,"events":[Object(InputEventKey,"physical_keycode":65)]}
 move_right={"deadzone":0.5,"events":[Object(InputEventKey,"physical_keycode":68)]}
