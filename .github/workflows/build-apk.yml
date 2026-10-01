@@ -18,12 +18,12 @@ jobs:
         run: |
           export ANDROID_HOME=/usr/lib/android-sdk
           export ANDROID_SDK_ROOT=/usr/lib/android-sdk
-          export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/build-tools/35.0.0:$PATH"
+          export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/build-tools/33.0.2:$PATH"
 
           sdkmanager --sdk_root="$ANDROID_HOME" \
             "platform-tools" \
-            "platforms;android-35" \
-            "build-tools;35.0.0"
+            "platforms;android-33" \
+            "build-tools;33.0.2"
 
       - name: Prepare Godot settings
         run: |
@@ -31,7 +31,7 @@ jobs:
           mkdir -p "$HOME/.config/godot"
 
           cp -a /root/.local/share/godot/export_templates/4.4.1.stable \
-            "$HOME/.local/share/godot/export_templates/" || true
+            "$HOME/.local/share/godot/export_templates/"
 
           cat > "$HOME/.config/godot/editor_settings-4.4.tres" <<'EOF'
           [gd_resource type="EditorSettings" format=3]
@@ -45,6 +45,8 @@ jobs:
           EOF
 
           test -f "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_debug.apk"
+          test -d "/usr/lib/android-sdk/build-tools/33.0.2"
+          test -d "/usr/lib/android-sdk/platforms/android-33"
 
       - name: Build Android APK
         run: |
