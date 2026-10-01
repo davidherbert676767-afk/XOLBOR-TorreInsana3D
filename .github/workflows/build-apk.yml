@@ -16,31 +16,35 @@ jobs:
 
       - name: Prepare Android SDK
         run: |
-          export ANDROID_SDK_ROOT=/usr/lib/android-sdk
           export ANDROID_HOME=/usr/lib/android-sdk
+          export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+          export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/build-tools/35.0.0:$PATH"
 
-          yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          sdkmanager --sdk_root="$ANDROID_HOME" \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0"
 
-          test -d /usr/lib/android-sdk/platforms/android-35
-          test -d /usr/lib/android-sdk/build-tools/35.0.0
-
-      - name: Prepare Godot Android
+      - name: Prepare Godot settings
         run: |
           mkdir -p "$HOME/.local/share/godot/export_templates"
           mkdir -p "$HOME/.config/godot"
 
-          if [ -d /root/.local/share/godot/export_templates/4.4.1.stable ]; then
-            cp -a /root/.local/share/godot/export_templates/4.4.1.stable \
-              "$HOME/.local/share/godot/export_templates/"
-          fi
+          cp -a /root/.local/share/godot/export_templates/4.4.1.stable \
+            "$HOME/.local/share/godot/export_templates/" || true
 
-          if [ -d /root/.config/godot ]; then
-            cp -a /root/.config/godot/. "$HOME/.config/godot/" || true
-          fi
+          cat > "$HOME/.config/godot/editor_settings-4.4.tres" <<'EOF'
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/android_sdk_path = "/usr/lib/android-sdk"
+          export/android/debug_keystore = "/root/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          EOF
 
           test -f "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_debug.apk"
-          test -f "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_release.apk"
 
       - name: Build Android APK
         run: |
