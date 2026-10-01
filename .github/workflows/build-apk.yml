@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     container:
       image: barichello/godot-ci:4.4.1
 
@@ -13,10 +14,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare Godot Android
+        run: |
+          mkdir -p "$HOME/.local/share/godot/export_templates"
+          mkdir -p "$HOME/.config/godot"
+
+          if [ -d /root/.local/share/godot/export_templates/4.4.1.stable ]; then
+            cp -a /root/.local/share/godot/export_templates/4.4.1.stable \
+              "$HOME/.local/share/godot/export_templates/"
+          fi
+
+          if [ -d /root/.config/godot ]; then
+            cp -a /root/.config/godot/. "$HOME/.config/godot/" || true
+          fi
+
+          test -f "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_debug.apk"
+          test -f "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_release.apk"
+
+          test -x /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+          test -d /usr/lib/android-sdk
+
       - name: Build Android APK
         run: |
           mkdir -p build
-          godot --headless --path . --export-debug "Android" build/XOLBOR-TorreInsana-3D.apk
+          godot --headless --path . \
+            --export-debug "Android" \
+            build/XOLBOR-TorreInsana-3D.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
