@@ -14,6 +14,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare Android SDK
+        run: |
+          export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+          export ANDROID_HOME=/usr/lib/android-sdk
+
+          yes | sdkmanager --licenses || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+          test -d /usr/lib/android-sdk/platforms/android-35
+          test -d /usr/lib/android-sdk/build-tools/35.0.0
+
       - name: Prepare Godot Android
         run: |
           mkdir -p "$HOME/.local/share/godot/export_templates"
@@ -30,9 +41,6 @@ jobs:
 
           test -f "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_debug.apk"
           test -f "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_release.apk"
-
-          test -x /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-          test -d /usr/lib/android-sdk
 
       - name: Build Android APK
         run: |
