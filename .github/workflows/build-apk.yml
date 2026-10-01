@@ -59,7 +59,7 @@ jobs:
           GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
           mkdir -p build
-          godot --headless --path . \
+          godot --headless --verbose --path . \
             --export-debug "Android" \
             build/XOLBOR-TorreInsana-3D.apk
 
