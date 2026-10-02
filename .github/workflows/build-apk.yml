@@ -14,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare Godot settings
+      - name: Preparar Godot
         run: |
           mkdir -p "$HOME/.local/share/godot/export_templates"
           mkdir -p "$HOME/.config/godot"
@@ -33,19 +33,15 @@ jobs:
           export/android/debug_keystore_pass = "android"
           EOF
 
-          test -f "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_debug.apk"
-          test -d "/usr/lib/android-sdk/build-tools/33.0.2"
-          test -d "/usr/lib/android-sdk/platforms/android-33"
-
-      - name: Build Android APK
+      - name: Gerar APK
         run: |
           mkdir -p build
           godot --headless --path . \
             --export-debug "Android" \
             build/XOLBOR-TorreInsana-3D.apk
 
-      - name: Upload APK
+      - name: Enviar APK
         uses: actions/upload-artifact@v4
         with:
-          name: XOLBOR-TorreInsana-3D-APK
+          name: XOLBOR-TorreInsana3D-APK
           path: build/XOLBOR-TorreInsana-3D.apk
