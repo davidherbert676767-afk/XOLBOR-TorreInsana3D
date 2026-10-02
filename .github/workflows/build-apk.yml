@@ -14,20 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare Android SDK 34
-        run: |
-          export ANDROID_HOME=/usr/lib/android-sdk
-          export ANDROID_SDK_ROOT=/usr/lib/android-sdk
-          export PATH="$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH"
-
-          yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses || true
-
-          sdkmanager --sdk_root="$ANDROID_HOME" \
-            "platform-tools" \
-            "platforms;android-34" \
-            "build-tools;34.0.0"
-
-      - name: Configure Godot Android
+      - name: Prepare Godot settings
         run: |
           mkdir -p "$HOME/.local/share/godot/export_templates"
           mkdir -p "$HOME/.config/godot"
@@ -47,19 +34,13 @@ jobs:
           EOF
 
           test -f "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_debug.apk"
-          test -d "/usr/lib/android-sdk/platforms/android-34"
-          test -d "/usr/lib/android-sdk/build-tools/34.0.0"
+          test -d "/usr/lib/android-sdk/build-tools/33.0.2"
+          test -d "/usr/lib/android-sdk/platforms/android-33"
 
       - name: Build Android APK
-        env:
-          ANDROID_HOME: /usr/lib/android-sdk
-          ANDROID_SDK_ROOT: /usr/lib/android-sdk
-          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: /root/debug.keystore
-          GODOT_ANDROID_KEYSTORE_DEBUG_USER: androiddebugkey
-          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
           mkdir -p build
-          godot --headless --verbose --path . \
+          godot --headless --path . \
             --export-debug "Android" \
             build/XOLBOR-TorreInsana-3D.apk
 
