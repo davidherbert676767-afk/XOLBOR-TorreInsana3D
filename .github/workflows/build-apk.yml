@@ -40,8 +40,22 @@ jobs:
             --export-debug "Android" \
             build/XOLBOR-TorreInsana-3D.apk
 
+      - name: Assinar APK
+        run: |
+          /usr/lib/android-sdk/build-tools/33.0.2/apksigner sign \
+            --ks /root/debug.keystore \
+            --ks-key-alias androiddebugkey \
+            --ks-pass pass:android \
+            --key-pass pass:android \
+            --out build/XOLBOR-TorreInsana-3D-assinado.apk \
+            build/XOLBOR-TorreInsana-3D.apk
+
+          /usr/lib/android-sdk/build-tools/33.0.2/apksigner verify \
+            --verbose \
+            build/XOLBOR-TorreInsana-3D-assinado.apk
+
       - name: Enviar APK
         uses: actions/upload-artifact@v4
         with:
           name: XOLBOR-TorreInsana3D-APK
-          path: build/XOLBOR-TorreInsana-3D.apk
+          path: build/XOLBOR-TorreInsana-3D-assinado.apk
